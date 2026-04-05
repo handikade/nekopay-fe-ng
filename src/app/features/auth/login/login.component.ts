@@ -1,15 +1,20 @@
-import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, ChangeDetectionStrategy, signal, inject } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { form, FormField, required, submit } from '@angular/forms/signals';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-group';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
+import { LoginRequest } from '../../../core/models/auth.model';
 
 @Component({
   selector: 'app-login',
   imports: [
     ReactiveFormsModule,
+    FormField,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -26,12 +31,16 @@ import { MatIconModule } from '@angular/material/icon';
         </mat-card-header>
 
         <mat-card-content>
-          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <form (submit)="onSubmit($event)">
             <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Username</mat-label>
-              <input matInput formControlName="username" placeholder="Enter username" />
-              @if (loginForm.get('username')?.hasError('required')) {
-                <mat-error>Username is required</mat-error>
+              <mat-label>Username or Email</mat-label>
+              <input
+                matInput
+                [formField]="loginForm.identifier"
+                placeholder="Enter username or email"
+              />
+              @if (loginForm.identifier().touched() && loginForm.identifier().invalid()) {
+                <mat-error>{{ loginForm.identifier().errors()[0]?.message }}</mat-error>
               }
             </mat-form-field>
 
@@ -40,7 +49,7 @@ import { MatIconModule } from '@angular/material/icon';
               <input
                 matInput
                 [type]="hidePassword() ? 'password' : 'text'"
-                formControlName="password"
+                [formField]="loginForm.password"
                 placeholder="Enter password"
               />
               <button
@@ -53,8 +62,8 @@ import { MatIconModule } from '@angular/material/icon';
               >
                 <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
               </button>
-              @if (loginForm.get('password')?.hasError('required')) {
-                <mat-error>Password is required</mat-error>
+              @if (loginForm.password().touched() && loginForm.password().invalid()) {
+                <mat-error>{{ loginForm.password().errors()[0]?.message }}</mat-error>
               }
             </mat-form-field>
 
@@ -63,7 +72,7 @@ import { MatIconModule } from '@angular/material/icon';
               color="primary"
               type="submit"
               class="full-width login-button"
-              [disabled]="loginForm.invalid"
+              [disabled]="loginForm().invalid()"
             >
               Login
             </button>
@@ -108,22 +117,38 @@ import { MatIconModule } from '@angular/material/icon';
   `,
 })
 export class LoginComponent {
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+
   hidePassword = signal(true);
 
-  loginForm = new FormGroup({
-    username: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    password: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
+  loginModel = signal<LoginRequest>({
+    identifier: '',
+    password: '',
   });
 
-  onSubmit() {
-    if (this.loginForm.valid) {
-      console.log('Login attempt:', this.loginForm.getRawValue());
-    }
+  loginForm = form(this.loginModel, (schemaPath) => {
+    required(schemaPath.identifier, { message: 'Username or email is required' });
+    required(schemaPath.password, { message: 'Password is required' });
+  });
+
+  onSubmit(event: Event) {
+    event.preventDefault();
+
+    submit(this.loginForm, async () => {
+      return new Promise<void>((resolve, reject) => {
+        this.authService.login(this.loginModel()).subscribe({
+          next: (response) => {
+            console.log('Login success:', response);
+            this.router.navigate(['/dashboard']);
+            resolve();
+          },
+          error: (err) => {
+            console.error('Login error:', err);
+            reject(err);
+          },
+        });
+      });
+    });
   }
 }
