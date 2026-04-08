@@ -1,6 +1,6 @@
 import { inject, Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, firstValueFrom, of, catchError } from 'rxjs';
+import { Observable, tap, firstValueFrom, of, catchError, shareReplay, finalize } from 'rxjs';
 import { LoginRequest, LoginResponse } from '../models/auth.model';
 import { environment } from '../../../environments/environment';
 
@@ -14,6 +14,8 @@ export class AuthService {
   private readonly _accessToken = signal<string | null>(null);
   readonly accessToken = this._accessToken.asReadonly();
   readonly isAuthenticated = computed(() => !!this._accessToken());
+
+  private refreshInProgress$: Observable<LoginResponse | null> | null = null;
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http
@@ -36,7 +38,11 @@ export class AuthService {
   }
 
   refresh(): Observable<LoginResponse | null> {
-    return this.http
+    if (this.refreshInProgress$) {
+      return this.refreshInProgress$;
+    }
+
+    this.refreshInProgress$ = this.http
       .post<LoginResponse>(`${this.baseUrl}/refresh`, {}, { withCredentials: true })
       .pipe(
         tap((response) => {
@@ -46,7 +52,13 @@ export class AuthService {
           this._accessToken.set(null);
           return of(null);
         }),
+        finalize(() => {
+          this.refreshInProgress$ = null;
+        }),
+        shareReplay(1),
       );
+
+    return this.refreshInProgress$;
   }
 
   async initializeAuth(): Promise<void> {
