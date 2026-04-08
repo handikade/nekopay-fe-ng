@@ -13,6 +13,35 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () =>
       import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+    children: [
+      {
+        path: 'summary',
+        loadComponent: () =>
+          import('./features/dashboard/pages/summary.component').then((m) => m.SummaryComponent),
+      },
+      {
+        path: 'sales-invoice',
+        loadComponent: () =>
+          import('./features/dashboard/pages/sales-invoice.component').then(
+            (m) => m.SalesInvoiceComponent,
+          ),
+      },
+      {
+        path: 'product',
+        loadComponent: () =>
+          import('./features/dashboard/pages/product.component').then((m) => m.ProductComponent),
+      },
+      {
+        path: 'partner',
+        loadComponent: () =>
+          import('./features/dashboard/pages/partner.component').then((m) => m.PartnerComponent),
+      },
+      {
+        path: '',
+        redirectTo: 'summary',
+        pathMatch: 'full',
+      },
+    ],
   },
   {
     path: '',
