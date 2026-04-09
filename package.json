@@ -32,6 +32,7 @@
   "private": true,
   "packageManager": "npm@10.9.4",
   "dependencies": {
+    "@angular/animations": "^21.2.8",
     "@angular/cdk": "^21.2.5",
     "@angular/common": "^21.1.0",
     "@angular/compiler": "^21.1.0",
@@ -50,6 +51,8 @@
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25.5.2",
     "angular-eslint": "21.3.1",
     "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",
