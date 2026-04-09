@@ -47,9 +47,12 @@ import { firstValueFrom } from 'rxjs';
                   matInput
                   [formField]="loginForm.identifier"
                   placeholder="Enter username or email"
+                  data-testid="login-identifier"
                 />
                 @if (loginForm.identifier().touched() && loginForm.identifier().invalid()) {
-                  <mat-error>{{ loginForm.identifier().errors()[0]?.message }}</mat-error>
+                  <mat-error data-testid="login-identifier-error">{{
+                    loginForm.identifier().errors()[0]?.message
+                  }}</mat-error>
                 }
               </mat-form-field>
 
@@ -60,6 +63,7 @@ import { firstValueFrom } from 'rxjs';
                   [type]="hidePassword() ? 'password' : 'text'"
                   [formField]="loginForm.password"
                   placeholder="Enter password"
+                  data-testid="login-password"
                 />
                 <button
                   type="button"
@@ -69,11 +73,14 @@ import { firstValueFrom } from 'rxjs';
                   [attr.aria-label]="'Hide password'"
                   [attr.aria-pressed]="hidePassword()"
                   [disabled]="isLoading()"
+                  data-testid="login-password-toggle"
                 >
                   <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
                 @if (loginForm.password().touched() && loginForm.password().invalid()) {
-                  <mat-error>{{ loginForm.password().errors()[0]?.message }}</mat-error>
+                  <mat-error data-testid="login-password-error">{{
+                    loginForm.password().errors()[0]?.message
+                  }}</mat-error>
                 }
               </mat-form-field>
 
@@ -83,6 +90,7 @@ import { firstValueFrom } from 'rxjs';
                 type="submit"
                 class="full-width login-button"
                 [disabled]="loginForm().invalid() || isLoading()"
+                data-testid="login-submit"
               >
                 @if (isLoading()) {
                   Logging in...
