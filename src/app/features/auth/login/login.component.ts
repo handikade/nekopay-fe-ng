@@ -1,17 +1,17 @@
-import { Component, ChangeDetectionStrategy, signal, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { form, FormField, required, submit } from '@angular/forms/signals';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { Router } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
-import { LoginRequest } from '../../../core/models/auth.model';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { LoginRequest } from '../../../core/models/auth.model';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -25,10 +25,11 @@ import { firstValueFrom } from 'rxjs';
     MatIconModule,
     MatSnackBarModule,
     MatProgressBarModule,
+    RouterLink,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="login-container">
+    <div class="login-container" data-testid="login-page">
       <mat-card class="login-card">
         @if (isLoading()) {
           <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -98,6 +99,11 @@ import { firstValueFrom } from 'rxjs';
                   Login
                 }
               </button>
+
+              <div class="register-link">
+                Don't have an account?
+                <a routerLink="/register" data-testid="login-register-link">Register</a>
+              </div>
             </fieldset>
           </form>
         </mat-card-content>
@@ -154,6 +160,12 @@ import { firstValueFrom } from 'rxjs';
 
     mat-form-field {
       margin-bottom: 8px;
+    }
+
+    .register-link {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 14px;
     }
   `,
 })
