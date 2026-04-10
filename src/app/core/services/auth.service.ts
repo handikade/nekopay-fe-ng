@@ -1,8 +1,13 @@
-import { inject, Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, firstValueFrom, of, catchError, shareReplay, finalize } from 'rxjs';
-import { LoginRequest, LoginResponse } from '../models/auth.model';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { catchError, finalize, firstValueFrom, Observable, of, shareReplay, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import {
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  RegisterResponse,
+} from '../models/auth.model';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +21,10 @@ export class AuthService {
   readonly isAuthenticated = computed(() => !!this._accessToken());
 
   private refreshInProgress$: Observable<LoginResponse | null> | null = null;
+
+  register(data: RegisterRequest): Observable<RegisterResponse> {
+    return this.http.post<RegisterResponse>(`${this.baseUrl}/register`, data);
+  }
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http
