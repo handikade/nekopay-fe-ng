@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { performLogin } from './auth.helpers';
 
 test.describe('Authentication', () => {
   test.beforeEach(async ({ page }) => {
@@ -7,17 +8,7 @@ test.describe('Authentication', () => {
   });
 
   test('should login successfully with valid credentials', async ({ page }) => {
-    // Fill in the login form
-    await page.getByTestId('login-identifier').fill('dika@nekopay.id');
-    await page.getByTestId('login-password').fill('neko1234');
-
-    // Submit the form
-    await page.getByTestId('login-submit').click();
-
-    // Verify navigation to the dashboard
-    await expect(page).toHaveURL(/.*dashboard\/summary/);
-    await expect(page.getByTestId('dashboard-toolbar')).toBeVisible();
-    await expect(page.getByTestId('dashboard-sidenav')).toBeVisible();
+    await performLogin(page, 'dika@nekopay.id', 'neko1234');
   });
 
   test('should show validation errors when fields are empty and touched', async ({ page }) => {
