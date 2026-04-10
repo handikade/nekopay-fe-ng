@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { performLogin } from './auth.helpers';
 
 test.describe('Registration', () => {
   test.beforeEach(async ({ page }) => {
@@ -12,11 +13,12 @@ test.describe('Registration', () => {
     const username = `testuser_${uniqueSuffix}`;
     const email = `testuser_${uniqueSuffix}@example.com`;
     const phone = `08${uniqueSuffix.slice(-9)}`;
+    const password = 'securepassword123';
 
     // Fill in the register form
     await page.getByTestId('register-username').fill(username);
     await page.getByTestId('register-email').fill(email);
-    await page.getByTestId('register-password').fill('securepassword123');
+    await page.getByTestId('register-password').fill(password);
     await page.getByTestId('register-phone').fill(phone);
 
     // Submit the form
@@ -25,6 +27,9 @@ test.describe('Registration', () => {
     // Verify navigation to the login page
     await expect(page).toHaveURL(/.*login/);
     await expect(page.getByTestId('login-page')).toBeVisible();
+
+    // Verify that the registered user can log in
+    await performLogin(page, email, password);
   });
 
   test('should show validation errors when fields are empty and touched', async ({ page }) => {
