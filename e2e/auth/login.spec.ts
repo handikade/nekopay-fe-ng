@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('Authentication', () => {
   test.beforeEach(async ({ page }) => {
@@ -16,6 +16,8 @@ test.describe('Authentication', () => {
 
     // Verify navigation to the dashboard
     await expect(page).toHaveURL(/.*dashboard\/summary/);
+    await expect(page.getByTestId('dashboard-toolbar')).toBeVisible();
+    await expect(page.getByTestId('dashboard-sidenav')).toBeVisible();
   });
 
   test('should show validation errors when fields are empty and touched', async ({ page }) => {
