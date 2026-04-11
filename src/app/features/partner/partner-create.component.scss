@@ -1,0 +1,58 @@
+.container {
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.header h1 {
+  margin: 0;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.types-section {
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.section-label {
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+}
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 16px 0;
+  color: #3f51b5;
+}
+.full-width {
+  width: 100%;
+}
+.checkbox-group {
+  display: flex;
+  gap: 24px;
+}
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+.custom-error {
+  font-size: 75%;
+  margin-top: -8px;
+}
+mat-spinner {
+  margin: 0 auto;
+}

@@ -39,8 +39,27 @@ export const routes: Routes = [
       },
       {
         path: 'partner',
-        loadComponent: () =>
-          import('./features/partner/partner.component').then((m) => m.PartnerComponent),
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/partner/partner.component').then((m) => m.PartnerComponent),
+          },
+          {
+            path: 'create',
+            loadComponent: () =>
+              import('./features/partner/partner-create.component').then(
+                (m) => m.PartnerCreateComponent,
+              ),
+          },
+          {
+            path: ':id',
+            loadComponent: () =>
+              import('./features/partner/partner-detail.component').then(
+                (m) => m.PartnerDetailComponent,
+              ),
+          },
+        ],
       },
       {
         path: '',
