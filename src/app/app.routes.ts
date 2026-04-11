@@ -40,7 +40,7 @@ export const routes: Routes = [
       {
         path: 'partner',
         loadComponent: () =>
-          import('./features/dashboard/pages/partner.component').then((m) => m.PartnerComponent),
+          import('./features/partner/partner.component').then((m) => m.PartnerComponent),
       },
       {
         path: '',
