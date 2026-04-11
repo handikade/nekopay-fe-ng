@@ -4,7 +4,11 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  accessToken: string;
+  statusCode: number;
+  message: string;
+  data: {
+    accessToken: string;
+  };
 }
 
 export interface RegisterRequest {
@@ -15,5 +19,9 @@ export interface RegisterRequest {
 }
 
 export interface RegisterResponse {
+  statusCode: number;
   message: string;
+  data: {
+    message: string;
+  };
 }

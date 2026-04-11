@@ -1,7 +1,7 @@
-import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { AuthService } from '../services/auth.service';
 import { catchError, switchMap, throwError } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
@@ -27,10 +27,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.status === 401 && !isAuthPath) {
         return authService.refresh().pipe(
           switchMap((response) => {
-            if (response?.accessToken) {
+            if (response?.data?.accessToken) {
               const retryReq = req.clone({
                 setHeaders: {
-                  Authorization: `Bearer ${response.accessToken}`,
+                  Authorization: `Bearer ${response.data.accessToken}`,
                 },
               });
               return next(retryReq);

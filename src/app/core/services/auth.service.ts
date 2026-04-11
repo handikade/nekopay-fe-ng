@@ -33,7 +33,12 @@ export class AuthService {
       })
       .pipe(
         tap((response) => {
-          this._accessToken.set(response.accessToken);
+          console.log(
+            '%c#debug [src/app/core/services/auth.service.ts] response:',
+            'color: skyblue;',
+            { response },
+          );
+          this._accessToken.set(response.data.accessToken);
         }),
       );
   }
@@ -55,7 +60,7 @@ export class AuthService {
       .post<LoginResponse>(`${this.baseUrl}/refresh`, {}, { withCredentials: true })
       .pipe(
         tap((response) => {
-          this._accessToken.set(response.accessToken);
+          this._accessToken.set(response.data.accessToken);
         }),
         catchError(() => {
           this._accessToken.set(null);
