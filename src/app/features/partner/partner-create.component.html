@@ -9,6 +9,8 @@
   <mat-card>
     <mat-card-content>
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="section-title">Basic</div>
+
         <div class="form-grid">
           <!-- Name -->
           <mat-form-field appearance="outline">
@@ -72,6 +74,28 @@
               <mat-error data-testid="partner-phone-error">Phone is required</mat-error>
             }
           </mat-form-field>
+        </div>
+
+        <!-- Partner Types -->
+        <div class="types-section">
+          <span class="section-label">Partner Types</span>
+          <div class="checkbox-group">
+            @for (type of partnerTypes; track type) {
+              <mat-checkbox
+                [checked]="isTypeSelected(type)"
+                (change)="toggleType(type)"
+                color="primary"
+                [attr.data-testid]="'partner-type-checkbox-' + type"
+              >
+                {{ type }}
+              </mat-checkbox>
+            }
+          </div>
+          @if (form.get('types')?.hasError('required')) {
+            <mat-error class="custom-error" data-testid="partner-types-error">
+              At least one type must be selected
+            </mat-error>
+          }
         </div>
 
         <mat-divider></mat-divider>
@@ -198,28 +222,6 @@
             rows="3"
           ></textarea>
         </mat-form-field>
-
-        <!-- Partner Types -->
-        <div class="types-section">
-          <span class="section-label">Partner Types</span>
-          <div class="checkbox-group">
-            @for (type of partnerTypes; track type) {
-              <mat-checkbox
-                [checked]="isTypeSelected(type)"
-                (change)="toggleType(type)"
-                color="primary"
-                [attr.data-testid]="'partner-type-checkbox-' + type"
-              >
-                {{ type }}
-              </mat-checkbox>
-            }
-          </div>
-          @if (form.get('types')?.hasError('required')) {
-            <mat-error class="custom-error" data-testid="partner-types-error">
-              At least one type must be selected
-            </mat-error>
-          }
-        </div>
 
         <div class="actions">
           <button

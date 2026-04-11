@@ -42,77 +42,83 @@ import { PartnerService } from '../../core/services/partner.service';
       } @else if (partnerResource.value(); as response) {
         @let partner = response.data;
         <div class="details-grid">
-          <mat-card>
-            <mat-card-header>
-              <mat-card-title>{{ partner.name }}</mat-card-title>
-              <mat-card-subtitle>{{ partner.legal_entity }}</mat-card-subtitle>
-            </mat-card-header>
-            <mat-card-content>
-              <div class="info-group">
-                <h3>General Information</h3>
-                <p><strong>Email:</strong> {{ partner.company_email }}</p>
-                <p><strong>Phone:</strong> {{ partner.company_phone }}</p>
-                <p><strong>Types:</strong> {{ partner.types.join(', ') }}</p>
-                <p>
-                  <strong>Created At:</strong> {{ partner.created_at | date: 'dd/MM/yyyy HH:mm' }}
-                </p>
-              </div>
-
-              <mat-divider></mat-divider>
-
-              <div class="info-group">
-                <h3>Address</h3>
-                <p>{{ partner.address }}</p>
-                <p>
-                  {{ partner.kelurahan_label }}, {{ partner.kecamatan_label }},
-                  {{ partner.kota_label }}, {{ partner.provinsi_label }} {{ partner.postal_code }}
-                </p>
-              </div>
-            </mat-card-content>
-          </mat-card>
-
-          @if (partner.contacts && partner.contacts.length > 0) {
+          <div class="details-grid__span-2">
             <mat-card>
               <mat-card-header>
-                <mat-card-title>Contacts</mat-card-title>
+                <mat-card-title>{{ partner.name }}</mat-card-title>
+                <mat-card-subtitle>{{ partner.legal_entity }}</mat-card-subtitle>
               </mat-card-header>
               <mat-card-content>
-                @for (contact of partner.contacts; track contact.id) {
-                  <div class="contact-item">
-                    <p>
-                      <strong>{{ contact.name }}</strong>
-                    </p>
-                    <p>{{ contact.email }}</p>
-                    <p>{{ contact.phone_number }}</p>
-                  </div>
-                  @if (!$last) {
-                    <mat-divider></mat-divider>
-                  }
-                }
+                <div class="info-group">
+                  <h3>General Information</h3>
+                  <p><strong>Email:</strong> {{ partner.company_email }}</p>
+                  <p><strong>Phone:</strong> {{ partner.company_phone }}</p>
+                  <p><strong>Types:</strong> {{ partner.types.join(', ') }}</p>
+                  <p>
+                    <strong>Created At:</strong> {{ partner.created_at | date: 'dd/MM/yyyy HH:mm' }}
+                  </p>
+                </div>
+
+                <mat-divider></mat-divider>
+
+                <div class="info-group">
+                  <h3>Address</h3>
+                  <p>{{ partner.address }}</p>
+                  <p>
+                    {{ partner.kelurahan_label }}, {{ partner.kecamatan_label }},
+                    {{ partner.kota_label }}, {{ partner.provinsi_label }} {{ partner.postal_code }}
+                  </p>
+                </div>
               </mat-card-content>
             </mat-card>
+          </div>
+
+          @if (partner.contacts && partner.contacts.length > 0) {
+            <div class="details-grid__span-1">
+              <mat-card>
+                <mat-card-header>
+                  <mat-card-title>Contacts</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  @for (contact of partner.contacts; track contact.id) {
+                    <div class="contact-item">
+                      <p>
+                        <strong>{{ contact.name }}</strong>
+                      </p>
+                      <p>{{ contact.email }}</p>
+                      <p>{{ contact.phone_number }}</p>
+                    </div>
+                    @if (!$last) {
+                      <mat-divider></mat-divider>
+                    }
+                  }
+                </mat-card-content>
+              </mat-card>
+            </div>
           }
 
           @if (partner.partner_bank_accounts && partner.partner_bank_accounts.length > 0) {
-            <mat-card>
-              <mat-card-header>
-                <mat-card-title>Bank Accounts</mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
-                @for (account of partner.partner_bank_accounts; track account.id) {
-                  <div class="bank-item">
-                    <p>
-                      <strong>{{ account.bank.name }}</strong>
-                    </p>
-                    <p>Account Name: {{ account.account_name }}</p>
-                    <p>Account Number: {{ account.account_number }}</p>
-                  </div>
-                  @if (!$last) {
-                    <mat-divider></mat-divider>
+            <div class="details-grid__span-1">
+              <mat-card>
+                <mat-card-header>
+                  <mat-card-title>Bank Accounts</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  @for (account of partner.partner_bank_accounts; track account.id) {
+                    <div class="bank-item">
+                      <p>
+                        <strong>{{ account.bank.name }}</strong>
+                      </p>
+                      <p>Account Name: {{ account.account_name }}</p>
+                      <p>Account Number: {{ account.account_number }}</p>
+                    </div>
+                    @if (!$last) {
+                      <mat-divider></mat-divider>
+                    }
                   }
-                }
-              </mat-card-content>
-            </mat-card>
+                </mat-card-content>
+              </mat-card>
+            </div>
           }
         </div>
       }
@@ -142,6 +148,14 @@ import { PartnerService } from '../../core/services/partner.service';
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
       gap: 24px;
+
+      &__span-2 {
+        grid-column: span 2;
+      }
+
+      &__span-1 {
+        grid-column: span 1;
+      }
     }
     .info-group {
       padding: 16px 0;
