@@ -37,4 +37,8 @@ export class PartnerService {
   create(data: CreatePartnerRequest): Observable<ApiResponse<Partner>> {
     return this.http.post<ApiResponse<Partner>>(this.baseUrl, data);
   }
+
+  delete(id: string): Observable<ApiResponse<null>> {
+    return this.http.delete<ApiResponse<null>>(`${this.baseUrl}/${id}`);
+  }
 }

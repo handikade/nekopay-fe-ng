@@ -3,10 +3,14 @@ import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core
 import { rxResource } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { PartnerService } from '@src/app/core/services/partner.service';
+import { UiConfirmDialog } from '@src/app/ui/confirm-dialog.component';
 import { UiPageTitle } from '@src/app/ui/page-title.component';
 
 @Component({
@@ -17,71 +21,89 @@ import { UiPageTitle } from '@src/app/ui/page-title.component';
     MatIconModule,
     MatDividerModule,
     MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatDialogModule,
     DatePipe,
     UiPageTitle,
   ],
   template: `
-    <ui-page-title title="Partner Details" backLink="/dashboard/partner" />
+    <div class="flex items-center justify-between pr-6">
+      <ui-page-title title="Partner Details" backLink="/dashboard/partner" />
+      <button matButton="tonal" (click)="deletePartner()">
+        <mat-icon>delete</mat-icon>
+        Delete Partner
+      </button>
+    </div>
 
-    <div class="container">
+    <div class="p-6 flex flex-col gap-6">
       @if (partnerResource.isLoading()) {
-        <div class="loading-container">
+        <div class="flex justify-center p-12">
           <mat-spinner diameter="48"></mat-spinner>
         </div>
       } @else if (partnerResource.error()) {
-        <mat-card class="error-card">
+        <mat-card class="text-red-600">
           <mat-card-content>
             <p>Error loading partner details. Please try again.</p>
           </mat-card-content>
         </mat-card>
       } @else if (partnerResource.value(); as response) {
         @let partner = response.data;
-        <div class="details-grid">
-          <div class="details-grid__span-2">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2">
             <mat-card>
               <mat-card-header>
                 <mat-card-title>{{ partner.name }}</mat-card-title>
                 <mat-card-subtitle>{{ partner.legal_entity }}</mat-card-subtitle>
               </mat-card-header>
               <mat-card-content>
-                <div class="info-group">
-                  <h3>General Information</h3>
-                  <p><strong>Email:</strong> {{ partner.company_email }}</p>
-                  <p><strong>Phone:</strong> {{ partner.company_phone }}</p>
-                  <p><strong>Types:</strong> {{ partner.types.join(', ') }}</p>
-                  <p>
-                    <strong>Created At:</strong> {{ partner.created_at | date: 'dd/MM/yyyy HH:mm' }}
-                  </p>
+                <div class="py-4">
+                  <h3 class="mt-0 text-gray-500 text-xs font-semibold uppercase tracking-wider">
+                    General Information
+                  </h3>
+                  <div class="mt-2 space-y-1">
+                    <p><strong>Email:</strong> {{ partner.company_email }}</p>
+                    <p><strong>Phone:</strong> {{ partner.company_phone }}</p>
+                    <p><strong>Types:</strong> {{ partner.types.join(', ') }}</p>
+                    <p>
+                      <strong>Created At:</strong>
+                      {{ partner.created_at | date: 'dd/MM/yyyy HH:mm' }}
+                    </p>
+                  </div>
                 </div>
 
                 <mat-divider></mat-divider>
 
-                <div class="info-group">
-                  <h3>Address</h3>
-                  <p>{{ partner.address }}</p>
-                  <p>
-                    {{ partner.kelurahan_label }}, {{ partner.kecamatan_label }},
-                    {{ partner.kota_label }}, {{ partner.provinsi_label }} {{ partner.postal_code }}
-                  </p>
+                <div class="py-4">
+                  <h3 class="mt-0 text-gray-500 text-xs font-semibold uppercase tracking-wider">
+                    Address
+                  </h3>
+                  <div class="mt-2">
+                    <p>{{ partner.address }}</p>
+                    <p>
+                      {{ partner.kelurahan_label }}, {{ partner.kecamatan_label }},
+                      {{ partner.kota_label }}, {{ partner.provinsi_label }}
+                      {{ partner.postal_code }}
+                    </p>
+                  </div>
                 </div>
               </mat-card-content>
             </mat-card>
           </div>
 
-          @if (partner.contacts && partner.contacts.length > 0) {
-            <div class="details-grid__span-1">
+          <div class="flex flex-col gap-6 lg:col-span-1">
+            @if (partner.contacts && partner.contacts.length > 0) {
               <mat-card>
                 <mat-card-header>
                   <mat-card-title>Contacts</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
                   @for (contact of partner.contacts; track contact.id) {
-                    <div class="contact-item">
+                    <div class="py-3">
                       <p>
                         <strong>{{ contact.name }}</strong>
                       </p>
-                      <p>{{ contact.email }}</p>
-                      <p>{{ contact.phone_number }}</p>
+                      <p class="text-sm text-gray-600">{{ contact.email }}</p>
+                      <p class="text-sm text-gray-600">{{ contact.phone_number }}</p>
                     </div>
                     @if (!$last) {
                       <mat-divider></mat-divider>
@@ -89,23 +111,23 @@ import { UiPageTitle } from '@src/app/ui/page-title.component';
                   }
                 </mat-card-content>
               </mat-card>
-            </div>
-          }
+            }
 
-          @if (partner.partner_bank_accounts && partner.partner_bank_accounts.length > 0) {
-            <div class="details-grid__span-1">
+            @if (partner.partner_bank_accounts && partner.partner_bank_accounts.length > 0) {
               <mat-card>
                 <mat-card-header>
                   <mat-card-title>Bank Accounts</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
                   @for (account of partner.partner_bank_accounts; track account.id) {
-                    <div class="bank-item">
+                    <div class="py-3">
                       <p>
                         <strong>{{ account.bank.name }}</strong>
                       </p>
-                      <p>Account Name: {{ account.account_name }}</p>
-                      <p>Account Number: {{ account.account_number }}</p>
+                      <p class="text-sm text-gray-600">Account Name: {{ account.account_name }}</p>
+                      <p class="text-sm text-gray-600">
+                        Account Number: {{ account.account_number }}
+                      </p>
                     </div>
                     @if (!$last) {
                       <mat-divider></mat-divider>
@@ -113,63 +135,19 @@ import { UiPageTitle } from '@src/app/ui/page-title.component';
                   }
                 </mat-card-content>
               </mat-card>
-            </div>
-          }
+            }
+          </div>
         </div>
       }
     </div>
-  `,
-  styles: `
-    .container {
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-    .loading-container {
-      display: flex;
-      justify-content: center;
-      padding: 48px;
-    }
-    .details-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 24px;
-
-      &__span-2 {
-        grid-column: span 2;
-      }
-
-      &__span-1 {
-        grid-column: span 1;
-      }
-    }
-    .info-group {
-      padding: 16px 0;
-    }
-    .info-group h3 {
-      margin-top: 0;
-      color: #666;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .contact-item,
-    .bank-item {
-      padding: 12px 0;
-    }
-    .contact-item p,
-    .bank-item p {
-      margin: 4px 0;
-    }
-    .error-card {
-      color: #f44336;
-    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PartnerDetailPage {
   private partnerService = inject(PartnerService);
+  private router = inject(Router);
+  private snackBar = inject(MatSnackBar);
+  private dialog = inject(MatDialog);
 
   // Route param 'id' bound as signal input
   id = input.required<string>();
@@ -178,4 +156,44 @@ export class PartnerDetailPage {
     params: () => ({ id: this.id() }),
     stream: ({ params }) => this.partnerService.getById(params.id),
   });
+
+  deletePartner() {
+    const dialogRef = this.dialog.open(UiConfirmDialog, {
+      data: {
+        title: 'Delete Partner',
+        message: 'Are you sure you want to delete this partner? This action cannot be undone.',
+        confirmText: 'Delete',
+        confirmColor: 'warn',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        this.executeDelete();
+      }
+    });
+  }
+
+  private executeDelete() {
+    this.partnerService.delete(this.id()).subscribe({
+      next: () => {
+        this.snackBar.open('Partner deleted successfully', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'end',
+          verticalPosition: 'top',
+        });
+        this.router.navigate(['/dashboard/partner']);
+      },
+      error: (err) => {
+        console.error('Error deleting partner:', err);
+        const message = err.error?.message || 'Failed to delete partner. Please try again.';
+        this.snackBar.open(message, 'Close', {
+          duration: 5000,
+          horizontalPosition: 'end',
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar'],
+        });
+      },
+    });
+  }
 }
