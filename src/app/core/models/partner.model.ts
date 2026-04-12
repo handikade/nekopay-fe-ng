@@ -45,6 +45,13 @@ export interface CreatePartnerRequest {
   kelurahan_label?: string;
   address?: string;
   postal_code?: string;
+  contacts?: CreateContactRequest[];
+}
+
+export interface CreateContactRequest {
+  name: string;
+  email: string;
+  phone_number: string;
 }
 
 export interface Contact {

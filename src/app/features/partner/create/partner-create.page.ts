@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -13,7 +13,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router, RouterLink } from '@angular/router';
-import { CreatePartnerRequest, LegalEntity, PartnerType } from '@src/app/core/models/partner.model';
+import {
+  CreateContactRequest,
+  CreatePartnerRequest,
+  LegalEntity,
+  PartnerType,
+} from '@src/app/core/models/partner.model';
 import { City, District, Province, Village } from '@src/app/core/models/region.model';
 import { PartnerService } from '@src/app/core/services/partner.service';
 import { RegionService } from '@src/app/core/services/region.service';
@@ -79,7 +84,39 @@ export class PartnerCreatePage {
       nonNullable: true,
       validators: [Validators.pattern(/^\d{5}$/)],
     }),
+
+    contacts: new FormArray<
+      FormGroup<{
+        name: FormControl<string>;
+        email: FormControl<string>;
+        phone_number: FormControl<string>;
+      }>
+    >([]),
   });
+
+  get contacts() {
+    return this.form.controls.contacts;
+  }
+
+  addContact() {
+    const contactGroup = new FormGroup({
+      name: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+      email: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.email],
+      }),
+      phone_number: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+    });
+
+    this.contacts.push(contactGroup);
+  }
+
+  removeContact(index: number) {
+    this.contacts.removeAt(index);
+  }
 
   // Convert form values to signals for reactive tracking in computed/rxResource
   provinsiValue = toSignal(this.form.controls.provinsi.valueChanges, {
@@ -229,6 +266,7 @@ export class PartnerCreatePage {
       company_phone: raw.company_phone,
       address: raw.address,
       postal_code: raw.postal_code,
+      contacts: raw.contacts as CreateContactRequest[],
     };
 
     // Map Regions
