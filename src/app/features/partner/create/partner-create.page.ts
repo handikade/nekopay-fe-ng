@@ -13,15 +13,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router, RouterLink } from '@angular/router';
+import { CreatePartnerRequest, LegalEntity, PartnerType } from '@src/app/core/models/partner.model';
+import { City, District, Province, Village } from '@src/app/core/models/region.model';
+import { PartnerService } from '@src/app/core/services/partner.service';
+import { RegionService } from '@src/app/core/services/region.service';
 import { finalize, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { CreatePartnerRequest, LegalEntity, PartnerType } from '../../core/models/partner.model';
-import { City, District, Province, Village } from '../../core/models/region.model';
-import { PartnerService } from '../../core/services/partner.service';
-import { RegionService } from '../../core/services/region.service';
 
 @Component({
-  selector: 'app-partner-create',
+  selector: 'partner-create-page',
   imports: [
     ReactiveFormsModule,
     MatCardModule,
@@ -37,11 +37,11 @@ import { RegionService } from '../../core/services/region.service';
     MatProgressSpinnerModule,
     RouterLink,
   ],
-  templateUrl: './partner-create.component.html',
-  styleUrl: './partner-create.component.scss',
+  templateUrl: './partner-create.page.html',
+  styleUrl: './partner-create.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PartnerCreateComponent {
+export class PartnerCreatePage {
   private partnerService = inject(PartnerService);
   private regionService = inject(RegionService);
   private router = inject(Router);

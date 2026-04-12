@@ -10,13 +10,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { Router, RouterLink } from '@angular/router';
+import { ApiResponse } from '@src/app/core/models/api.model';
+import { Partner, PartnerParams } from '@src/app/core/models/partner.model';
+import { PartnerService } from '@src/app/core/services/partner.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { ApiResponse } from '../../core/models/api.model';
-import { Partner, PartnerParams } from '../../core/models/partner.model';
-import { PartnerService } from '../../core/services/partner.service';
 
 @Component({
-  selector: 'app-partner',
+  selector: 'partner-list-page',
   imports: [
     MatTableModule,
     MatPaginatorModule,
@@ -172,7 +172,7 @@ import { PartnerService } from '../../core/services/partner.service';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PartnerComponent {
+export class PartnerListPage {
   private partnerService = inject(PartnerService);
   private router = inject(Router);
 

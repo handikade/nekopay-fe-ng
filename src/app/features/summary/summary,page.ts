@@ -1,7 +1,7 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'app-summary',
+  selector: 'summary-page',
   template: `
     <h1>Summary works!</h1>
     <div id="lipsum">
@@ -103,4 +103,4 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SummaryComponent {}
+export class SummaryPage {}

@@ -7,10 +7,10 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterLink } from '@angular/router';
-import { PartnerService } from '../../core/services/partner.service';
+import { PartnerService } from '@src/app/core/services/partner.service';
 
 @Component({
-  selector: 'app-partner-detail',
+  selector: 'partner-detail-page',
   imports: [
     MatCardModule,
     MatButtonModule,
@@ -181,7 +181,7 @@ import { PartnerService } from '../../core/services/partner.service';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PartnerDetailComponent {
+export class PartnerDetailPage {
   private partnerService = inject(PartnerService);
 
   // Route param 'id' bound as signal input

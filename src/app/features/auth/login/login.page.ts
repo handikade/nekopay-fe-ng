@@ -14,7 +14,7 @@ import { LoginRequest } from '../../../core/models/auth.model';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'login-page',
   imports: [
     ReactiveFormsModule,
     FormField,
@@ -169,7 +169,7 @@ import { AuthService } from '../../../core/services/auth.service';
     }
   `,
 })
-export class LoginComponent {
+export class LoginPage {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly snackBar = inject(MatSnackBar);

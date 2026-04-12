@@ -8,7 +8,7 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'dashboard-layout',
   imports: [
     MatButtonModule,
     MatSidenavModule,
@@ -117,7 +117,7 @@ import { AuthService } from '../../core/services/auth.service';
     }
   `,
 })
-export class DashboardComponent {
+export class DashboardLayout {
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
 

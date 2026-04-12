@@ -5,37 +5,32 @@ export const routes: Routes = [
   {
     path: 'login',
     canActivate: [guestGuard],
-    loadComponent: () =>
-      import('./features/auth/login/login.component').then((m) => m.LoginComponent),
+    loadComponent: () => import('./features/auth/login/login.page').then((m) => m.LoginPage),
   },
   {
     path: 'register',
     canActivate: [guestGuard],
     loadComponent: () =>
-      import('./features/auth/register/register.component').then((m) => m.RegisterComponent),
+      import('./features/auth/register/register.page').then((m) => m.RegisterPage),
   },
   {
     path: 'dashboard',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+      import('./features/dashboard/dashboard.layout').then((m) => m.DashboardLayout),
     children: [
       {
         path: 'summary',
-        loadComponent: () =>
-          import('./features/dashboard/pages/summary.component').then((m) => m.SummaryComponent),
+        loadComponent: () => import('./features/summary/summary,page').then((m) => m.SummaryPage),
       },
       {
         path: 'sales-invoice',
         loadComponent: () =>
-          import('./features/dashboard/pages/sales-invoice.component').then(
-            (m) => m.SalesInvoiceComponent,
-          ),
+          import('./features/invoice-sales/invoice-sales.page').then((m) => m.InvoiceSalesPage),
       },
       {
         path: 'product',
-        loadComponent: () =>
-          import('./features/dashboard/pages/product.component').then((m) => m.ProductComponent),
+        loadComponent: () => import('./features/product/product.page').then((m) => m.ProductPage),
       },
       {
         path: 'partner',
@@ -43,20 +38,20 @@ export const routes: Routes = [
           {
             path: '',
             loadComponent: () =>
-              import('./features/partner/partner.component').then((m) => m.PartnerComponent),
+              import('./features/partner/list/partner-list.page').then((m) => m.PartnerListPage),
           },
           {
             path: 'create',
             loadComponent: () =>
-              import('./features/partner/partner-create.component').then(
-                (m) => m.PartnerCreateComponent,
+              import('./features/partner/create/partner-create.page').then(
+                (m) => m.PartnerCreatePage,
               ),
           },
           {
             path: ':id',
             loadComponent: () =>
-              import('./features/partner/partner-detail.component').then(
-                (m) => m.PartnerDetailComponent,
+              import('./features/partner/detail/partner-detail.page').then(
+                (m) => m.PartnerDetailPage,
               ),
           },
         ],

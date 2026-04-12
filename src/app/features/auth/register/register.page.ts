@@ -14,7 +14,7 @@ import { RegisterRequest } from '../../../core/models/auth.model';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
-  selector: 'app-register',
+  selector: 'register-page',
   imports: [
     ReactiveFormsModule,
     FormField,
@@ -189,7 +189,7 @@ import { AuthService } from '../../../core/services/auth.service';
     }
   `,
 })
-export class RegisterComponent {
+export class RegisterPage {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly snackBar = inject(MatSnackBar);

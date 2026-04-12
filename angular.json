@@ -16,7 +16,7 @@
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "app",
+      "prefix": "neko",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
