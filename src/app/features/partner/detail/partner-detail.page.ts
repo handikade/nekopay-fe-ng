@@ -6,9 +6,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { RouterLink } from '@angular/router';
-import { UiPageTitle } from '@src/app/app/ui/page-title.component';
 import { PartnerService } from '@src/app/core/services/partner.service';
+import { UiPageTitle } from '@src/app/ui/page-title.component';
 
 @Component({
   selector: 'partner-detail-page',
@@ -19,11 +18,10 @@ import { PartnerService } from '@src/app/core/services/partner.service';
     MatDividerModule,
     MatProgressSpinnerModule,
     DatePipe,
-    RouterLink,
     UiPageTitle,
   ],
   template: `
-    <ui-page-title title="Partner Details" />
+    <ui-page-title title="Partner Details" backLink="/dashboard/partner" />
 
     <div class="container">
       @if (partnerResource.isLoading()) {

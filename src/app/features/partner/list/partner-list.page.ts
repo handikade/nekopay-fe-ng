@@ -13,7 +13,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ApiResponse } from '@src/app/core/models/api.model';
 import { Partner, PartnerParams } from '@src/app/core/models/partner.model';
 import { PartnerService } from '@src/app/core/services/partner.service';
-import { UiPageTitle } from '@src/app/app/ui/page-title.component';
+import { UiPageTitle } from '@src/app/ui/page-title.component';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
@@ -32,7 +32,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
     UiPageTitle,
   ],
   template: `
-    <ui-page-title title="Partners" [backLink]="null" />
+    <ui-page-title title="Partners" />
 
     <div class="container">
       <div class="header-actions">

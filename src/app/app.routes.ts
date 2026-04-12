@@ -21,7 +21,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'summary',
-        loadComponent: () => import('./features/summary/summary,page').then((m) => m.SummaryPage),
+        loadComponent: () => import('./features/summary/summary.page').then((m) => m.SummaryPage),
       },
       {
         path: 'sales-invoice',

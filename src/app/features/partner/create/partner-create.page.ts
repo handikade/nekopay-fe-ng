@@ -17,7 +17,7 @@ import { CreatePartnerRequest, LegalEntity, PartnerType } from '@src/app/core/mo
 import { City, District, Province, Village } from '@src/app/core/models/region.model';
 import { PartnerService } from '@src/app/core/services/partner.service';
 import { RegionService } from '@src/app/core/services/region.service';
-import { UiPageTitle } from '@src/app/app/ui/page-title.component';
+import { UiPageTitle } from '@src/app/ui/page-title.component';
 import { finalize, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 

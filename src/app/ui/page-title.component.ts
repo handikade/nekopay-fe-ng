@@ -25,5 +25,5 @@ import { RouterLink } from '@angular/router';
 })
 export class UiPageTitle {
   title = input.required<string>();
-  backLink = input<string | unknown[]>('/dashboard/partner');
+  backLink = input<string | unknown[] | null>(null);
 }
