@@ -13,6 +13,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ApiResponse } from '@src/app/core/models/api.model';
 import { Partner, PartnerParams } from '@src/app/core/models/partner.model';
 import { PartnerService } from '@src/app/core/services/partner.service';
+import { UiPageTitle } from '@src/app/app/ui/page-title.component';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
@@ -28,11 +29,12 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
     MatIconModule,
     DatePipe,
     RouterLink,
+    UiPageTitle,
   ],
   template: `
-    <div class="container">
-      <h1>Partners</h1>
+    <ui-page-title title="Partners" [backLink]="null" />
 
+    <div class="container">
       <div class="header-actions">
         <mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
           <mat-label>Search partners</mat-label>

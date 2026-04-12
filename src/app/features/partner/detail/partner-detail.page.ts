@@ -7,6 +7,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterLink } from '@angular/router';
+import { UiPageTitle } from '@src/app/app/ui/page-title.component';
 import { PartnerService } from '@src/app/core/services/partner.service';
 
 @Component({
@@ -19,16 +20,12 @@ import { PartnerService } from '@src/app/core/services/partner.service';
     MatProgressSpinnerModule,
     DatePipe,
     RouterLink,
+    UiPageTitle,
   ],
   template: `
-    <div class="container">
-      <div class="header">
-        <button mat-icon-button routerLink="/dashboard/partner">
-          <mat-icon>arrow_back</mat-icon>
-        </button>
-        <h1>Partner Details</h1>
-      </div>
+    <ui-page-title title="Partner Details" />
 
+    <div class="container">
       @if (partnerResource.isLoading()) {
         <div class="loading-container">
           <mat-spinner diameter="48"></mat-spinner>
@@ -130,14 +127,6 @@ import { PartnerService } from '@src/app/core/services/partner.service';
       display: flex;
       flex-direction: column;
       gap: 24px;
-    }
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .header h1 {
-      margin: 0;
     }
     .loading-container {
       display: flex;
