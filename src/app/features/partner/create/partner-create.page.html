@@ -317,6 +317,125 @@
     </mat-card>
     <!-- #endregion CONTACTS -->
 
+    <!-- #region BANK ACCOUNTS -->
+    <mat-card>
+      <mat-card-content>
+        <div class="flex justify-between items-center my-4">
+          <div class="text-lg font-medium">Bank Accounts</div>
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="addBankAccount()"
+            data-testid="add-bank-account-button"
+          >
+            <mat-icon>add</mat-icon>
+            Add Bank Account
+          </button>
+        </div>
+
+        <div formArrayName="partner_bank_accounts" class="flex flex-col gap-4">
+          @for (bankGroup of partner_bank_accounts.controls; track bankGroup; let i = $index) {
+            <div [formGroupName]="i" class="p-4 border rounded-lg relative bg-slate-50/50">
+              <div class="flex justify-between items-center mb-4">
+                <span class="font-medium text-black/60">Bank Account #{{ i + 1 }}</span>
+                <button
+                  mat-icon-button
+                  color="warn"
+                  type="button"
+                  (click)="removeBankAccount(i)"
+                  [attr.data-testid]="'remove-bank-account-button-' + i"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Bank -->
+                <mat-form-field appearance="outline" class="md:col-span-2">
+                  <mat-label>Bank</mat-label>
+                  <input
+                    matInput
+                    formControlName="bank"
+                    [matAutocomplete]="bankAuto"
+                    (input)="onBankSearch($event)"
+                    placeholder="Search bank..."
+                    [attr.data-testid]="'bank-autocomplete-input-' + i"
+                  />
+                  <mat-autocomplete
+                    #bankAuto="matAutocomplete"
+                    [displayWith]="displayFn"
+                    (opened)="onBankAutocompleteOpened()"
+                  >
+                    @for (bank of banks(); track bank.id) {
+                      <mat-option [value]="bank" [attr.data-testid]="'bank-option-' + bank.code">
+                        {{ bank.name }} ({{ bank.code }})
+                      </mat-option>
+                    }
+                    @if (isBanksLoading()) {
+                      <mat-option disabled>
+                        <div class="flex items-center justify-center p-2">
+                          <mat-spinner diameter="20"></mat-spinner>
+                        </div>
+                      </mat-option>
+                    }
+                  </mat-autocomplete>
+                  @if (bankGroup.get('bank')?.value) {
+                    <button
+                      matSuffix
+                      mat-icon-button
+                      aria-label="Clear"
+                      (click)="bankGroup.get('bank')?.setValue(null)"
+                      type="button"
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  }
+                  @if (bankGroup.get('bank')?.hasError('required')) {
+                    <mat-error>Bank is required</mat-error>
+                  }
+                </mat-form-field>
+
+                <!-- Account Number -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Account Number</mat-label>
+                  <input
+                    matInput
+                    formControlName="account_number"
+                    placeholder="e.g. 070000..."
+                    [attr.data-testid]="'account-number-input-' + i"
+                  />
+                  @if (bankGroup.get('account_number')?.hasError('required')) {
+                    <mat-error>Account Number is required</mat-error>
+                  }
+                </mat-form-field>
+
+                <!-- Account Name -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Account Name</mat-label>
+                  <input
+                    matInput
+                    formControlName="account_name"
+                    placeholder="e.g. PT Neko..."
+                    [attr.data-testid]="'account-name-input-' + i"
+                  />
+                  @if (bankGroup.get('account_name')?.hasError('required')) {
+                    <mat-error>Account Name is required</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            </div>
+          } @empty {
+            <div
+              class="text-center py-8 text-black/40 italic bg-slate-50/30 rounded-lg border-2 border-dashed"
+            >
+              No bank accounts added yet. Click "Add Bank Account" to add one.
+            </div>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <!-- #endregion BANK ACCOUNTS -->
+
     <!-- #region ACTIONS -->
     <mat-card>
       <mat-card-content>

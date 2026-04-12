@@ -20,8 +20,10 @@ import {
   PartnerType,
 } from '@src/app/core/models/partner.model';
 import { City, District, Province, Village } from '@src/app/core/models/region.model';
+import { Bank } from '@src/app/core/models/bank.model';
 import { PartnerService } from '@src/app/core/services/partner.service';
 import { RegionService } from '@src/app/core/services/region.service';
+import { BankService } from '@src/app/core/services/bank.service';
 import { UiPageTitle } from '@src/app/ui/page-title.component';
 import { finalize, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -50,10 +52,18 @@ import { map } from 'rxjs/operators';
 export class PartnerCreatePage {
   private partnerService = inject(PartnerService);
   private regionService = inject(RegionService);
+  private bankService = inject(BankService);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
 
   isLoading = signal(false);
+
+  // Banks for autocomplete
+  banks = signal<Bank[]>([]);
+  isBanksLoading = signal(false);
+  hasMoreBanks = signal(true);
+  private bankPage = 1;
+  private bankSearch = '';
 
   legalEntities: LegalEntity[] = ['CV', 'PT', 'KOPERASI', 'INDIVIDUAL'];
   partnerTypes: PartnerType[] = ['BUYER', 'SUPPLIER'];
@@ -92,6 +102,14 @@ export class PartnerCreatePage {
         phone_number: FormControl<string>;
       }>
     >([]),
+
+    partner_bank_accounts: new FormArray<
+      FormGroup<{
+        bank: FormControl<Bank | string | null>;
+        account_number: FormControl<string>;
+        account_name: FormControl<string>;
+      }>
+    >([]),
   });
 
   get contacts() {
@@ -116,6 +134,92 @@ export class PartnerCreatePage {
 
   removeContact(index: number) {
     this.contacts.removeAt(index);
+  }
+
+  get partner_bank_accounts() {
+    return this.form.controls.partner_bank_accounts;
+  }
+
+  addBankAccount() {
+    const bankGroup = new FormGroup({
+      bank: new FormControl<Bank | string | null>(null, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      account_number: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      account_name: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+    });
+
+    this.partner_bank_accounts.push(bankGroup);
+
+    // Load banks if not already loaded
+    if (this.banks().length === 0) {
+      this.loadBanks(true);
+    }
+  }
+
+  removeBankAccount(index: number) {
+    this.partner_bank_accounts.removeAt(index);
+  }
+
+  loadBanks(reset = false) {
+    if (reset) {
+      this.bankPage = 1;
+      this.hasMoreBanks.set(true);
+    }
+
+    if (!this.hasMoreBanks() || this.isBanksLoading()) return;
+
+    this.isBanksLoading.set(true);
+    this.bankService
+      .getList({ page: this.bankPage, limit: 10, search: this.bankSearch })
+      .subscribe({
+        next: (res) => {
+          if (reset) {
+            this.banks.set(res.data);
+          } else {
+            this.banks.update((current) => [...current, ...res.data]);
+          }
+          this.hasMoreBanks.set(
+            res.meta ? res.meta.page < (res.meta.totalPages ?? 0) : res.data.length === 10,
+          );
+          this.bankPage++;
+          this.isBanksLoading.set(false);
+        },
+        error: () => {
+          this.isBanksLoading.set(false);
+        },
+      });
+  }
+
+  onBankSearch(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.bankSearch = value;
+    this.loadBanks(true);
+  }
+
+  onBankScroll() {
+    this.loadBanks();
+  }
+
+  onBankAutocompleteOpened() {
+    setTimeout(() => {
+      const panel = document.querySelector('.mat-mdc-autocomplete-panel');
+      if (panel) {
+        panel.addEventListener('scroll', (event: Event) => {
+          const target = event.target as HTMLElement;
+          if (target.scrollTop + target.offsetHeight >= target.scrollHeight - 10) {
+            this.onBankScroll();
+          }
+        });
+      }
+    });
   }
 
   // Convert form values to signals for reactive tracking in computed/rxResource
@@ -267,6 +371,11 @@ export class PartnerCreatePage {
       address: raw.address,
       postal_code: raw.postal_code,
       contacts: raw.contacts as CreateContactRequest[],
+      partner_bank_accounts: (raw.partner_bank_accounts ?? []).map((b) => ({
+        bank_id: typeof b.bank === 'object' && b.bank !== null ? (b.bank as Bank).id : '',
+        account_number: b.account_number,
+        account_name: b.account_name,
+      })),
     };
 
     // Map Regions

@@ -46,12 +46,19 @@ export interface CreatePartnerRequest {
   address?: string;
   postal_code?: string;
   contacts?: CreateContactRequest[];
+  partner_bank_accounts?: CreatePartnerBankAccountRequest[];
 }
 
 export interface CreateContactRequest {
   name: string;
   email: string;
   phone_number: string;
+}
+
+export interface CreatePartnerBankAccountRequest {
+  bank_id: string;
+  account_number: string;
+  account_name: string;
 }
 
 export interface Contact {
