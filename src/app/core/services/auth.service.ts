@@ -15,8 +15,11 @@ import {
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiUrl}/auth`;
+  private readonly STORAGE_KEY = 'access_token';
 
-  private readonly _accessToken = signal<string | null>(null);
+  private readonly _accessToken = signal<string | null>(
+    !environment.production ? localStorage.getItem(this.STORAGE_KEY) : null,
+  );
   readonly accessToken = this._accessToken.asReadonly();
   readonly isAuthenticated = computed(() => !!this._accessToken());
 
@@ -29,26 +32,23 @@ export class AuthService {
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>(`${this.baseUrl}/login`, credentials, {
-        withCredentials: true,
+        withCredentials: environment.production,
       })
       .pipe(
         tap((response) => {
-          console.log(
-            '%c#debug [src/app/core/services/auth.service.ts] response:',
-            'color: skyblue;',
-            { response },
-          );
-          this._accessToken.set(response.data.accessToken);
+          this.setToken(response.data.accessToken);
         }),
       );
   }
 
   logout(): Observable<void> {
-    return this.http.post<void>(`${this.baseUrl}/logout`, {}, { withCredentials: true }).pipe(
-      tap(() => {
-        this._accessToken.set(null);
-      }),
-    );
+    return this.http
+      .post<void>(`${this.baseUrl}/logout`, {}, { withCredentials: environment.production })
+      .pipe(
+        tap(() => {
+          this.clearToken();
+        }),
+      );
   }
 
   refresh(): Observable<LoginResponse | null> {
@@ -57,13 +57,17 @@ export class AuthService {
     }
 
     this.refreshInProgress$ = this.http
-      .post<LoginResponse>(`${this.baseUrl}/refresh`, {}, { withCredentials: true })
+      .post<LoginResponse>(
+        `${this.baseUrl}/refresh`,
+        {},
+        { withCredentials: environment.production },
+      )
       .pipe(
         tap((response) => {
-          this._accessToken.set(response.data.accessToken);
+          this.setToken(response.data.accessToken);
         }),
         catchError(() => {
-          this._accessToken.set(null);
+          this.clearToken();
           return of(null);
         }),
         finalize(() => {
@@ -76,6 +80,23 @@ export class AuthService {
   }
 
   async initializeAuth(): Promise<void> {
+    if (!environment.production && this.accessToken()) {
+      return;
+    }
     await firstValueFrom(this.refresh());
+  }
+
+  private setToken(token: string): void {
+    this._accessToken.set(token);
+    if (!environment.production) {
+      localStorage.setItem(this.STORAGE_KEY, token);
+    }
+  }
+
+  private clearToken(): void {
+    this._accessToken.set(null);
+    if (!environment.production) {
+      localStorage.removeItem(this.STORAGE_KEY);
+    }
   }
 }
