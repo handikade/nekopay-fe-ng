@@ -8,7 +8,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { PartnerService } from '@src/app/core/services/partner.service';
 import { UiConfirmDialog } from '@src/app/ui/confirm-dialog.component';
 import { UiPageTitle } from '@src/app/ui/page-title.component';
@@ -24,15 +24,22 @@ import { UiPageTitle } from '@src/app/ui/page-title.component';
     MatSnackBarModule,
     MatDialogModule,
     DatePipe,
+    RouterLink,
     UiPageTitle,
   ],
   template: `
     <div class="flex items-center justify-between pr-6">
       <ui-page-title title="Partner Details" backLink="/dashboard/partner" />
-      <button matButton="tonal" (click)="deletePartner()">
-        <mat-icon>delete</mat-icon>
-        Delete Partner
-      </button>
+      <div class="flex gap-2">
+        <a mat-stroked-button [routerLink]="['/dashboard/partner', id(), 'edit']">
+          <mat-icon>edit</mat-icon>
+          Edit Partner
+        </a>
+        <button mat-flat-button color="warn" (click)="deletePartner()">
+          <mat-icon>delete</mat-icon>
+          Delete Partner
+        </button>
+      </div>
     </div>
 
     <div class="p-6 flex flex-col gap-6">

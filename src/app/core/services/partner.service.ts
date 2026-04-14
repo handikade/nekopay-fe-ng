@@ -3,7 +3,12 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../models/api.model';
-import { CreatePartnerRequest, Partner, PartnerParams } from '../models/partner.model';
+import {
+  CreatePartnerRequest,
+  Partner,
+  PartnerParams,
+  UpdatePartnerRequest,
+} from '../models/partner.model';
 
 @Injectable({
   providedIn: 'root',
@@ -36,6 +41,10 @@ export class PartnerService {
 
   create(data: CreatePartnerRequest): Observable<ApiResponse<Partner>> {
     return this.http.post<ApiResponse<Partner>>(this.baseUrl, data);
+  }
+
+  update(id: string, data: UpdatePartnerRequest): Observable<ApiResponse<Partner>> {
+    return this.http.patch<ApiResponse<Partner>>(`${this.baseUrl}/${id}`, data);
   }
 
   delete(id: string): Observable<ApiResponse<null>> {

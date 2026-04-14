@@ -49,6 +49,8 @@ export interface CreatePartnerRequest {
   partner_bank_accounts?: CreatePartnerBankAccountRequest[];
 }
 
+export type UpdatePartnerRequest = Partial<CreatePartnerRequest>;
+
 export interface CreateContactRequest {
   name: string;
   email: string;

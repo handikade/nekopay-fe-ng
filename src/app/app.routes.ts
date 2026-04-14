@@ -48,6 +48,11 @@ export const routes: Routes = [
               ),
           },
           {
+            path: ':id/edit',
+            loadComponent: () =>
+              import('./features/partner/edit/partner-edit.page').then((m) => m.PartnerEditPage),
+          },
+          {
             path: ':id',
             loadComponent: () =>
               import('./features/partner/detail/partner-detail.page').then(
