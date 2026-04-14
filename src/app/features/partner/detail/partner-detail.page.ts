@@ -31,11 +31,20 @@ import { UiPageTitle } from '@src/app/ui/page-title.component';
     <div class="flex items-center justify-between pr-6">
       <ui-page-title title="Partner Details" backLink="/dashboard/partner" />
       <div class="flex gap-2">
-        <a mat-stroked-button [routerLink]="['/dashboard/partner', id(), 'edit']">
+        <a
+          mat-stroked-button
+          [routerLink]="['/dashboard/partner', id(), 'edit']"
+          data-testid="partner-edit-button"
+        >
           <mat-icon>edit</mat-icon>
           Edit Partner
         </a>
-        <button mat-flat-button color="warn" (click)="deletePartner()">
+        <button
+          mat-flat-button
+          color="warn"
+          (click)="deletePartner()"
+          data-testid="partner-delete-button"
+        >
           <mat-icon>delete</mat-icon>
           Delete Partner
         </button>
@@ -59,8 +68,12 @@ import { UiPageTitle } from '@src/app/ui/page-title.component';
           <div class="lg:col-span-2">
             <mat-card>
               <mat-card-header>
-                <mat-card-title>{{ partner.name }}</mat-card-title>
-                <mat-card-subtitle>{{ partner.legal_entity }}</mat-card-subtitle>
+                <mat-card-title data-testid="detail-partner-name">{{
+                  partner.name
+                }}</mat-card-title>
+                <mat-card-subtitle data-testid="detail-partner-legal-entity">
+                  {{ partner.legal_entity }}
+                </mat-card-subtitle>
               </mat-card-header>
               <mat-card-content>
                 <div class="py-4">
@@ -68,12 +81,23 @@ import { UiPageTitle } from '@src/app/ui/page-title.component';
                     General Information
                   </h3>
                   <div class="mt-2 space-y-1">
-                    <p><strong>Email:</strong> {{ partner.company_email }}</p>
-                    <p><strong>Phone:</strong> {{ partner.company_phone }}</p>
-                    <p><strong>Types:</strong> {{ partner.types.join(', ') }}</p>
+                    <p>
+                      <strong>Email:</strong>
+                      <span data-testid="detail-partner-email">{{ partner.company_email }}</span>
+                    </p>
+                    <p>
+                      <strong>Phone:</strong>
+                      <span data-testid="detail-partner-phone">{{ partner.company_phone }}</span>
+                    </p>
+                    <p>
+                      <strong>Types:</strong>
+                      <span data-testid="detail-partner-types">{{ partner.types.join(', ') }}</span>
+                    </p>
                     <p>
                       <strong>Created At:</strong>
-                      {{ partner.created_at | date: 'dd/MM/yyyy HH:mm' }}
+                      <span data-testid="detail-partner-created-at">
+                        {{ partner.created_at | date: 'dd/MM/yyyy HH:mm' }}
+                      </span>
                     </p>
                   </div>
                 </div>
@@ -85,11 +109,13 @@ import { UiPageTitle } from '@src/app/ui/page-title.component';
                     Address
                   </h3>
                   <div class="mt-2">
-                    <p>{{ partner.address }}</p>
-                    <p>
+                    <p data-testid="detail-partner-address">{{ partner.address }}</p>
+                    <p data-testid="detail-partner-full-region">
                       {{ partner.kelurahan_label }}, {{ partner.kecamatan_label }},
                       {{ partner.kota_label }}, {{ partner.provinsi_label }}
-                      {{ partner.postal_code }}
+                      <span data-testid="detail-partner-postal-code">{{
+                        partner.postal_code
+                      }}</span>
                     </p>
                   </div>
                 </div>

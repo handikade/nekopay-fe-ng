@@ -43,10 +43,16 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
             [value]="search()"
             (input)="onSearchChange($any($event.target).value)"
             placeholder="Search by name..."
+            data-testid="partner-search-input"
           />
         </mat-form-field>
 
-        <button mat-flat-button color="primary" (click)="onCreatePartner()">
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="onCreatePartner()"
+          data-testid="create-partner-button"
+        >
           <mat-icon>add</mat-icon>
           Create Partner
         </button>
@@ -55,16 +61,26 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
       <div class="table-container mat-elevation-z8">
         @if (partnersResource.isLoading()) {
           <div class="loading-shade">
-            <mat-spinner diameter="40"></mat-spinner>
+            <mat-spinner diameter="40" data-testid="partner-list-loading"></mat-spinner>
           </div>
         }
 
-        <table mat-table [dataSource]="dataSource()" matSort (matSortChange)="onSortChange($event)">
+        <table
+          mat-table
+          [dataSource]="dataSource()"
+          matSort
+          (matSortChange)="onSortChange($event)"
+          data-testid="partner-table"
+        >
           <!-- Name Column -->
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
             <td mat-cell *matCellDef="let element">
-              <a [routerLink]="['/dashboard/partner', element.id]" class="partner-link">
+              <a
+                [routerLink]="['/dashboard/partner', element.id]"
+                class="partner-link"
+                data-testid="partner-name-link"
+              >
                 {{ element.name }}
               </a>
             </td>
@@ -97,10 +113,14 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            data-testid="partner-row"
+          ></tr>
 
           <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="5">
+            <td class="mat-cell" colspan="5" data-testid="partner-no-data">
               @if (!partnersResource.isLoading()) {
                 No data matching the search query
               }

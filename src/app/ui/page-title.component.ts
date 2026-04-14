@@ -13,7 +13,7 @@ import { RouterLink } from '@angular/router';
           <mat-icon>arrow_back</mat-icon>
         </button>
       }
-      <h1 class="m-0 text-2xl font-semibold">{{ title() }}</h1>
+      <h1 class="m-0 text-2xl font-semibold" data-testid="page-title">{{ title() }}</h1>
     </div>
   `,
   styles: `

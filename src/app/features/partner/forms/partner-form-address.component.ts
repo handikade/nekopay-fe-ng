@@ -131,7 +131,12 @@ import { map } from 'rxjs/operators';
           <!-- Postal Code -->
           <mat-form-field appearance="outline">
             <mat-label>Postal Code</mat-label>
-            <input matInput formControlName="postal_code" placeholder="e.g. 12345" />
+            <input
+              matInput
+              formControlName="postal_code"
+              placeholder="e.g. 12345"
+              data-testid="partner-postal-code-input"
+            />
             @if (form().get('postal_code')?.hasError('pattern')) {
               <mat-error>Must be 5 digits</mat-error>
             }
@@ -146,6 +151,7 @@ import { map } from 'rxjs/operators';
             formControlName="address"
             placeholder="Street, building, etc."
             rows="3"
+            data-testid="partner-address-textarea"
           ></textarea>
         </mat-form-field>
       </mat-card-content>
