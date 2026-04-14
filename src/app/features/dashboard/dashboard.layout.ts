@@ -5,7 +5,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '@src/app/core/services/auth.service';
 
 @Component({
   selector: 'dashboard-layout',
@@ -21,30 +21,36 @@ import { AuthService } from '../../core/services/auth.service';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <mat-sidenav-container class="sidenav-container" autosize>
+    <mat-sidenav-container class="h-screen" autosize>
       <!-- SIDENAV -->
       <mat-sidenav
         #drawer
-        class="sidenav"
+        class="sidenav transition-[width] duration-200 overflow-x-hidden"
         [attr.role]="'navigation'"
         [mode]="'side'"
         [opened]="true"
         [style.width.px]="isExpanded() ? 240 : 70"
         data-testid="dashboard-sidenav"
       >
-        <mat-toolbar>
+        <mat-toolbar class="sticky top-0 z-[1]">
           <button
             type="button"
             aria-label="Toggle sidenav"
             mat-icon-button
             (click)="toggleSidenav()"
+            data-testid="dashboard-toggle-sidenav"
           >
             <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
           </button>
         </mat-toolbar>
         <mat-nav-list>
           @for (item of menuItems; track item.path) {
-            <a mat-list-item [routerLink]="item.path" routerLinkActive="active-link">
+            <a
+              mat-list-item
+              [routerLink]="item.path"
+              routerLinkActive="bg-black/10 text-[#3f51b5]"
+              [attr.data-testid]="'dashboard-nav-item-' + item.path"
+            >
               <mat-icon matListItemIcon [title]="isExpanded() ? '' : item.label">
                 {{ item.icon }}
               </mat-icon>
@@ -58,17 +64,17 @@ import { AuthService } from '../../core/services/auth.service';
       <!-- end of SIDENAV -->
 
       <!-- SIDENAV CONTENT -->
-      <mat-sidenav-content>
-        <mat-toolbar color="primary" data-testid="dashboard-toolbar">
+      <mat-sidenav-content class="overflow-y-auto">
+        <mat-toolbar color="primary" class="sticky top-0 z-1" data-testid="dashboard-toolbar">
           <span>NekoPay Dashboard</span>
-          <span class="spacer"></span>
-          <button mat-button (click)="logout()">
+          <span class="flex-1"></span>
+          <button mat-button (click)="logout()" data-testid="dashboard-logout-button">
             <mat-icon>logout</mat-icon>
             Logout
           </button>
         </mat-toolbar>
 
-        <div class="content">
+        <div class="p-6">
           <router-outlet />
         </div>
       </mat-sidenav-content>
@@ -78,42 +84,12 @@ import { AuthService } from '../../core/services/auth.service';
   styles: `
     :host {
       --mat-list-active-indicator-shape: 0px;
-      // --mat-toolbar-container-background-color: var(--mat-sys-surface-dim);
-    }
-
-    .sidenav-container {
-      height: 100vh;
     }
 
     .sidenav {
-      transition: width 0.2s;
-      overflow-x: hidden;
       background-color: var(--mat-sys-surface-container);
       border-right: 1px solid var(--mat-sys-outline-variant);
       --mat-sidenav-container-shape: 0;
-    }
-
-    .spacer {
-      flex: 1 1 auto;
-    }
-
-    .content {
-      padding: 24px;
-    }
-
-    .active-link {
-      background: rgba(0, 0, 0, 0.1);
-      color: #3f51b5;
-    }
-
-    .mat-drawer-content {
-      overflow-y: scroll;
-    }
-
-    mat-toolbar {
-      position: sticky;
-      top: 0;
-      z-index: 1;
     }
   `,
 })
