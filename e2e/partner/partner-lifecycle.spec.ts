@@ -21,7 +21,9 @@ test.describe('Partner Lifecycle', () => {
     const updatedPartnerName = `${partnerName} UPDATED`;
 
     // 2. Creation Flow
-    await page.goto('http://localhost:4200/dashboard/partner/create');
+    await page.getByTestId('dashboard-nav-item-partner').click();
+    await expect(page.getByTestId('page-title')).toContainText('Partners');
+    await page.getByTestId('create-partner-button').click();
     await expect(page.getByTestId('page-title')).toContainText('Create Partner');
 
     // Fill Basic information
@@ -69,7 +71,7 @@ test.describe('Partner Lifecycle', () => {
     await expect(page.getByTestId('detail-partner-legal-entity')).toHaveText('CV');
 
     // 5. List & Search Verification
-    await page.goto('http://localhost:4200/dashboard/partner');
+    await page.getByTestId('dashboard-nav-item-partner').click();
     await expect(page.getByTestId('page-title')).toContainText('Partners');
 
     // Search for the updated name
@@ -82,7 +84,9 @@ test.describe('Partner Lifecycle', () => {
     }
 
     // Verification: Search result in table
-    const partnerLink = page.getByTestId('partner-name-link').filter({ hasText: updatedPartnerName });
+    const partnerLink = page
+      .getByTestId('partner-name-link')
+      .filter({ hasText: updatedPartnerName });
     await expect(partnerLink).toBeVisible();
 
     // 6. Deletion Flow

@@ -43,9 +43,7 @@ test.describe('Registration', () => {
     await emailInput.focus(); // Blur username
 
     await expect(page.getByTestId('register-username-error')).toBeVisible();
-    await expect(page.getByTestId('register-username-error')).toContainText(
-      'Username is required',
-    );
+    await expect(page.getByTestId('register-username-error')).toContainText('Username is required');
 
     // Touch email field
     await emailInput.focus();
@@ -59,17 +57,13 @@ test.describe('Registration', () => {
     await usernameInput.focus(); // Blur password
 
     await expect(page.getByTestId('register-password-error')).toBeVisible();
-    await expect(page.getByTestId('register-password-error')).toContainText(
-      'Password is required',
-    );
+    await expect(page.getByTestId('register-password-error')).toContainText('Password is required');
 
     // Validating format requirements (e.g., invalid email)
     await emailInput.fill('not-an-email');
     await passwordInput.focus(); // Blur email
     await expect(page.getByTestId('register-email-error')).toBeVisible();
-    await expect(page.getByTestId('register-email-error')).toContainText(
-      'Invalid email address',
-    );
+    await expect(page.getByTestId('register-email-error')).toContainText('Invalid email address');
 
     // Validating password length
     await passwordInput.fill('short');
@@ -96,7 +90,7 @@ test.describe('Registration', () => {
     // Check for snackbar error message
     const snackbar = page.locator('mat-snack-bar-container');
     await expect(snackbar).toBeVisible();
-    
+
     // We expect some error text from the server, verify it's just not empty or assume some substring
     // We at least expect the snackbar to be visibly shown as an error
     await expect(snackbar).not.toBeEmpty();

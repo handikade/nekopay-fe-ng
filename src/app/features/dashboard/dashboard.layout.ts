@@ -21,7 +21,7 @@ import { AuthService } from '@src/app/core/services/auth.service';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <mat-sidenav-container class="h-screen" autosize>
+    <mat-sidenav-container class="h-screen" data-testid="dashboard-sidenav-container" autosize>
       <!-- SIDENAV -->
       <mat-sidenav
         #drawer
@@ -32,7 +32,7 @@ import { AuthService } from '@src/app/core/services/auth.service';
         [style.width.px]="isExpanded() ? 240 : 70"
         data-testid="dashboard-sidenav"
       >
-        <mat-toolbar class="sticky top-0 z-[1]">
+        <mat-toolbar class="sticky top-0 z-1">
           <button
             type="button"
             aria-label="Toggle sidenav"

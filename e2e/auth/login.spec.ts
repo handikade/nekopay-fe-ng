@@ -53,6 +53,6 @@ test.describe('Authentication', () => {
     await expect(snackbar).toContainText('Invalid credentials');
 
     // Should still be on login page
-    await expect(page).toHaveURL(/.*login/);
+    await expect(page.getByTestId('login-page')).toBeVisible();
   });
 });

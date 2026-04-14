@@ -7,8 +7,10 @@ test.describe('Partner Create', () => {
     await page.goto('http://localhost:4200/login');
     // Login with provided credentials
     await performLogin(page, 'dika', 'neko1234');
-    // Navigate to create partner page
-    await page.goto('http://localhost:4200/dashboard/partner/create');
+    // Navigate to create partner page via UI
+    await page.getByTestId('dashboard-nav-item-partner').click();
+    await page.getByTestId('create-partner-button').click();
+    await expect(page.getByTestId('page-title')).toContainText('Create Partner');
   });
 
   test('happy path: should create partner successfully', async ({ page }) => {
@@ -35,7 +37,7 @@ test.describe('Partner Create', () => {
     await expect(snackbar).toContainText('Partner created successfully');
 
     // Verify navigation back to partner list
-    await expect(page).toHaveURL(/.*dashboard\/partner$/);
+    await expect(page.getByTestId('page-title')).toContainText('Partner Details');
   });
 
   test('negative case: should show validation errors', async ({ page }) => {
@@ -67,6 +69,6 @@ test.describe('Partner Create', () => {
   test('should navigate back when cancel button is clicked', async ({ page }) => {
     await page.getByTestId('partner-cancel-button').click();
     // Verify navigation back to partner list
-    await expect(page).toHaveURL(/.*dashboard\/partner$/);
+    await expect(page.getByTestId('page-title')).toContainText('Partners');
   });
 });
