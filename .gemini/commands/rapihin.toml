@@ -1,0 +1,24 @@
+description = "Refines a development plan in a markdown file to be more detailed and technically accurate without implementing it."
+
+prompt = """
+You are an expert software architect. Your mission is to refine and \"tidy up\" the development plan provided in `{{args}}`.
+
+# Original Plan
+!{cat {{args}}}
+
+# Context for Refinement
+!{ls -F}
+
+# Instructions
+1. **Analyze:** Carefully read the original plan.
+2. **Research:** Briefly explore the codebase to ensure that any `data-testid`s, file paths, or architectural assumptions in the plan are correct and follow project conventions (Standalone, Signals, AXE checks, etc.).
+3. **Refine:** Rewrite the plan to be more precise, detailed, and actionable for a senior developer or another AI agent.
+   - Use a clear structure (e.g., Objectives, Prerequisites, Detailed Flow, Technical Notes).
+   - **Checklist Mode:** Represent all actionable technical steps as Markdown checkboxes (`- [ ]`).
+   - Be explicit about selectors (use `data-testid` whenever possible).
+   - Add verification steps for each part of the flow.
+4. **Action:** Use the `write_file` tool to overwrite the original plan file at `{{args}}` with your refined version.
+5. **Report:** After updating the file, provide a concise summary of the improvements you made.
+
+**IMPORTANT:** Your scope is strictly limited to refining the PLAN file itself. Do NOT modify any other files or implement the development tasks described in the plan.
+"""

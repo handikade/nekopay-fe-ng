@@ -10,7 +10,8 @@
     "lint": "ng lint",
     "format": "prettier --write src/",
     "commit": "cz",
-    "prepare": "husky"
+    "prepare": "husky",
+    "plan:new": "node __plan/makePlanFile.js --name"
   },
   "config": {
     "commitizen": {

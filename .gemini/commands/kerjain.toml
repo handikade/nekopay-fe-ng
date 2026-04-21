@@ -1,0 +1,33 @@
+description = "Executes a development plan defined in a markdown file."
+
+prompt = """
+You are an expert software engineer tasked with executing a development plan.
+
+# Input Plan
+The following plan has been provided for execution:
+!{cat {{args}}}
+
+# Instructions
+Please follow these steps strictly:
+
+1. **Analyze:** Thoroughly read and understand the provided plan from `{{args}}`.
+2. **Research:** Explore the codebase to identify relevant files and current implementations related to the plan.
+3. **Strategize:** Break down the plan into actionable technical steps if it's not already detailed.
+4. **Execute:**
+   - Implement the changes described in the plan.
+   - Follow the project's engineering standards (Standalone components, Signals, etc.).
+   - Ensure all changes are surgical and idiomatic.
+5. **Verify & Cleanup:**
+   - Run `npm run build` to ensure there are no compilation errors.
+   - Run `npm run lint` and fix any linting errors that arise from your changes.
+   - Run `npm run format` to ensure consistent code style.
+
+# Context
+Project Root Structure:
+!{ls -F}
+
+Current Git Status:
+!{git status}
+
+Begin by analyzing the plan and identifying the first set of files you need to read.
+"""
