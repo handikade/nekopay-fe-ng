@@ -15,6 +15,7 @@ Please follow these steps strictly:
 3. **Strategize:** Break down the plan into actionable technical steps if it's not already detailed.
 4. **Execute:**
    - Implement the changes described in the plan.
+   - **Progress Tracking:** Use `replace` or `write_file` to mark items as completed (`- [x]`) in the plan file `{{args}}` as you finish them.
    - Follow the project's engineering standards (Standalone components, Signals, etc.).
    - Ensure all changes are surgical and idiomatic.
 5. **Verify & Cleanup:**
